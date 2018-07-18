@@ -21,5 +21,6 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Views\Books\" />
+    <Folder Include="Views\Patrons\" />
   </ItemGroup>
 </Project>

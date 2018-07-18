@@ -86,7 +86,7 @@ namespace Library.Models
 
         public void Checkout(Book newBook)
         {
-            int totalCopies = this.FindRemainingCopies(newBook);
+            int totalCopies = (this.FindRemainingCopies(newBook) - 1);
             MySqlConnection conn = DB.Connection();
             conn.Open();
 
@@ -104,6 +104,115 @@ namespace Library.Models
                 conn.Dispose();
             }
         }
+
+        public void ReturnBook(Book newBook)
+        {
+            int totalCopies = (this.FindRemainingCopies(newBook) + 1);
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            var cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"UPDATE copies_books SET copy_id = @TotalCopies WHERE book_id = @BookId; DELETE FROM patrons_books WHERE book_id= @BookId AND patron_id = @PatronId;";
+
+            cmd.Parameters.AddWithValue("@TotalCopies", totalCopies);
+            cmd.Parameters.AddWithValue("@BookId", newBook.Id);
+            cmd.Parameters.AddWithValue("@PatronId", this.Id);
+
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        }
+
+        public List<Book> GetPatronBooks()
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            var cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT books.* FROM patrons
+                                JOIN patrons_books ON (patrons.id = patrons_books.patron_id)
+                                JOIN books ON (patrons_books.book_id = books.id)
+                                WHERE patron_id = @PatronId;";
+
+            cmd.Parameters.AddWithValue("@PatronId", this.Id);
+            var rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+            List<Book> allBooks = new List<Book> { };
+
+            while (rdr.Read())
+            {
+                string bookTitle = rdr.GetString(1);
+                Book newBook = new Book(bookTitle);
+                allBooks.Add(newBook);
+            }
+
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+
+            return allBooks;
+        }
+
+        public static List<Patron> GetAllPatrons()
+        {
+            List<Patron> allPatrons = new List<Patron> { };
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM patrons";
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            while (rdr.Read())
+            {
+                string patronName = rdr.GetString(1);
+
+                Patron newPatron = new Patron(patronName);
+                allPatrons.Add(newPatron);
+            }
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+            return allPatrons;
+        }
+
+        public static Patron FindPatron(int id)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            var cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM patrons WHERE id = @patronId;";
+
+            cmd.Parameters.AddWithValue("@patronId", id);
+
+            var rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+            int patronId = 0;
+            string patronName = "";
+
+            while (rdr.Read())
+            {
+                patronId = rdr.GetInt32(0);
+                patronName = rdr.GetString(1);
+            }
+
+            Patron foundPatron = new Patron(patronName, patronId);
+
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+
+            return foundPatron;
+        }
+
+
 
         //public List<Author> GetBooksByAuthor()
         //{

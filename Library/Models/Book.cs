@@ -113,6 +113,28 @@ namespace Library.Models
             return allAuthors;
         }
 
+        public static List<Book> GetAllBooks()
+        {
+            List<Book> allBooks = new List<Book> { };
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM books";
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            while (rdr.Read())
+            {
+                string bookTitle = rdr.GetString(1);
+
+                Book newBook = new Book(bookTitle);
+                allBooks.Add(newBook);
+            }
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+            return allBooks;
+        }
         //public List<Copy> GetAvailableCopies()
         //{
         //    MySqlConnection conn = DB.Connection();

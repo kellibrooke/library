@@ -9,11 +9,11 @@ namespace Library.Controllers
 {
     public class BooksController : Controller
     {
-        //[HttpGet("/books")]
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
+        [HttpGet("/books")]
+        public IActionResult ViewAllBooks()
+        {
+            return View(Book.GetAllBooks());
+        }
 
         [HttpGet("/books/new")]
         public IActionResult CreateBookForm()
@@ -29,7 +29,7 @@ namespace Library.Controllers
             Copy newCopy = new Copy(copies);
             newBook.Save(newAuthor, newCopy);
             newBook.AddBookDetails(newAuthor, newCopy);
-            return View("CreateBookForm");
+            return RedirectToAction("ViewAllBooks");
         }
     }
 }

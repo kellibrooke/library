@@ -1,0 +1,15 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<h1>@Model.Name</h1>
+<p>Name: @Model.Name</p>
+<p>Books Checked Out:</p>
+@foreach (var book in Model.GetPatronBooks())
+{
+    <p>@book.Title</p>
+}
+
+ 
