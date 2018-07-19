@@ -8,7 +8,5 @@
 @foreach (var book in Model)
 {
     <p>@book.Title</p>
-    <form method="post" action="">
-        <button class="btn btn-primary">Checkout Book</button>
-    </form>
+     <p>@patron.Name @patron.Id<a href="/patrons/@patron.Id/" class="btn btn-info">Checkout Book</a></p>
 }

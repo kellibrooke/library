@@ -10,6 +10,12 @@ namespace Library.Controllers
     public class BooksController : Controller
     {
         [HttpGet("/books")]
+        public IActionResult Login()
+        {
+            return View();    
+        }
+
+        [HttpGet("/books")]
         public IActionResult ViewAllBooks()
         {
             return View(Book.GetAllBooks());

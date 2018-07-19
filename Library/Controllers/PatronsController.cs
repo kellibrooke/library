@@ -37,5 +37,12 @@ namespace Library.Controllers
             Patron newPatron = Patron.FindPatron(id);
             return View(newPatron);
         }
+
+        [HttpPost("/patrons/{id}")]
+        public IActionResult PatronPage(int id)
+        {
+            Patron newPatron = Patron.FindPatron(id);
+            return View(newPatron);
+        }
     }
 }

@@ -7,5 +7,5 @@
 <h1>All Members</h1>
 @foreach (var patron in Model)
 {
-    <p>@patron.Name<a href="/patrons/@patron.Id/" class="btn btn-info">Login</a></p>
+    <p>@patron.Name @patron.Id<a href="/patrons/@patron.Id/" class="btn btn-info">Login</a></p>
 }

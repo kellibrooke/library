@@ -17,7 +17,7 @@ namespace Library.Models
 
         public override bool Equals(System.Object otherPatron)
         {
-            if (!(otherPatron is Book))
+            if (!(otherPatron is Patron))
             {
                 return false;
             }
@@ -46,7 +46,7 @@ namespace Library.Models
             cmd.Parameters.AddWithValue("@Name", this.Name);
 
             cmd.ExecuteNonQuery();
-            Id = (int)cmd.LastInsertedId;
+            this.Id = (int)cmd.LastInsertedId;
             conn.Close();
             if (conn != null)
             {
@@ -168,8 +168,9 @@ namespace Library.Models
             while (rdr.Read())
             {
                 string patronName = rdr.GetString(1);
+                int patronId = rdr.GetInt32(0);
 
-                Patron newPatron = new Patron(patronName);
+                Patron newPatron = new Patron(patronName, patronId);
                 allPatrons.Add(newPatron);
             }
             conn.Close();
@@ -210,6 +211,20 @@ namespace Library.Models
             }
 
             return foundPatron;
+        }
+
+        public static void DeleteAll()
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            var cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"DELETE FROM patrons;";
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
         }
 
 

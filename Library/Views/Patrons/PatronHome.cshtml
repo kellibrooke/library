@@ -4,12 +4,27 @@
 @{
 }
 
-<h1>@Model.Name</h1>
-<p>Name: @Model.Name</p>
-<p>Books Checked Out:</p>
-@foreach (var book in Model.GetPatronBooks())
-{
-    <p>@book.Title</p>
-}
+<h3>@Model.Name's Account Details</h3>
+<div class="row">
+    <div class="col-sm-6">
+        <form action="/patrons/@Model.Id">
+            <label for="patronBooks">Books Checked Out:</label>
+            <select name="patronBooks" class="form-control form-control-sm">
+                @foreach (var book in Model.GetPatronBooks())
+                {
+                    <option value="@book.Id">@book.Title</option>
+                }
+            </select>
+            <button class="btn btn-info" type="submit">Return Book</button>
+        </form>
+    </div>
 
- 
+    <div class="col-sm-6">
+        <h3>@Model.Name's Wishlist</h3>
+        <form action="/patrons/@Model.Id">
+            
+            <a href="/patrons/@Model.Id/checkout" class="btn btn-info">Check Out A New Book</a>
+        </form>
+    </div>
+</div>
+

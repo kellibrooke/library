@@ -23,4 +23,7 @@
     <Folder Include="Views\Books\" />
     <Folder Include="Views\Patrons\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Views\Books\Login.cshtml" />
+  </ItemGroup>
 </Project>
